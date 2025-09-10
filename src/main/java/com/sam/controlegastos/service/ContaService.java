@@ -46,8 +46,29 @@ public class ContaService {
 
     // Editar uma conta existente
     public Conta editarConta(Long id, Conta conta) {
-        // lógica depois
-        return null;
+        // Buscar conta existente
+        Conta contaExistente = contaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada, digite novamente."));
+
+        // Validar descrição
+        if (contaExistente.getDescricao() == null || conta.getDescricao().trim().isEmpty()) {
+            throw new IllegalArgumentException("Descrição é obrigatória!");
+        }
+
+        // Validar valor
+        if (contaExistente.getValor() == null) {
+            throw new IllegalArgumentException("Valor é obrigatório!");
+        }
+        if (contaExistente.getValor().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor deve ser maior que zero!");
+        }
+
+        // Atualizar os dados
+        contaExistente.setDescricao(conta.getDescricao());
+        contaExistente.setValor(conta.getValor());
+
+        // 5. Salvar no banco
+        return contaRepository.save(contaExistente);
     }
 
     // Excluir uma conta pelo ID
