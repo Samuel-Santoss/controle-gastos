@@ -24,21 +24,22 @@ public class ContaService {
             throw new IllegalArgumentException("Conta não informada");
         }
 
-        // 2) Validar descrição
+        // Validar descrição
         else if (conta.getDescricao() == null || conta.getDescricao().trim().isEmpty()) {
             throw new IllegalArgumentException("Descrição é obrigatória");
         }
-        // 3) Validar valor
-        if (conta.getValor() == null)
+        // Validar valor
+        if (conta.getValor() == null) {
             throw new IllegalArgumentException("Valor é obrigatório");
-        if (conta.getValor().compareTo(BigDecimal.ZERO) <= 0)
+        }
+        if (conta.getValor().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Valor deve ser maior que zero");
-
-        // 4) Tratar dataCadastro
-         if (conta.getDataCadastro() == null)
+        }
+        // Tratar dataCadastro
+         if (conta.getDataCadastro() == null) {
              conta.setDataCadastro(LocalDate.now());
-
-        // 5) Garantir que não persistimos um id enviado pelo cliente
+         }
+        // Garantir que não persistimos um id enviado pelo cliente
             conta.setId(null);
 
         return contaRepository.save(conta);
@@ -67,24 +68,36 @@ public class ContaService {
         contaExistente.setDescricao(conta.getDescricao());
         contaExistente.setValor(conta.getValor());
 
-        // 5. Salvar no banco
+        // Salvar no banco
         return contaRepository.save(contaExistente);
     }
 
     // Excluir uma conta pelo ID
     public void excluirConta(Long id) {
-        // TODO: implementar exclusão depois
+        if (contaRepository.existsById(id)) {
+            contaRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Conta não encontrada");
+        }
     }
 
     // Listar todas as contas
     public List<Conta> listarContas() {
-        // lógica depois
-        return null;
+        return contaRepository.findAll();
     }
 
     // Resumo mensal (valor total gasto em um mês)
     public BigDecimal resumoMensal(int ano, int mes) {
-        // lógica depois
-        return null;
+
+        LocalDate inicio = LocalDate.of(ano, mes, 1);
+
+        LocalDate fim = inicio.withDayOfMonth(inicio.lengthOfMonth());
+
+        List<Conta> contaDoMes = contaRepository.findByDataBetween(inicio, fim);
+
+
+        return contaDoMes.stream()
+                .map(Conta::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
