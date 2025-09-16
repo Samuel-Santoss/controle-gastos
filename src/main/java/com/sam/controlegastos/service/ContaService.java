@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class ContaService {
@@ -87,17 +90,18 @@ public class ContaService {
     }
 
     // Resumo mensal (valor total gasto em um mês)
-    public BigDecimal resumoMensal(int ano, int mes) {
-
-        LocalDate inicio = LocalDate.of(ano, mes, 1);
-
-        LocalDate fim = inicio.withDayOfMonth(inicio.lengthOfMonth());
-
-        List<Conta> contaDoMes = contaRepository.findByDataBetween(inicio, fim);
-
-
-        return contaDoMes.stream()
+    public Map<String, Object> resumoMensal(int ano, int mes) {
+        BigDecimal total = contaRepository.findAll().stream()
+                .filter(c -> c.getDataCadastro() != null
+                        && c.getDataCadastro().getYear() == ano
+                        && c.getDataCadastro().getMonthValue() == mes)
                 .map(Conta::getValor)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal :: add);
+
+        Map<String, Object> resumo = new HashMap<>();
+        resumo.put("ano", ano);
+        resumo.put("mes", mes);
+        resumo.put("total", total);
+        return resumo;
     }
 }
