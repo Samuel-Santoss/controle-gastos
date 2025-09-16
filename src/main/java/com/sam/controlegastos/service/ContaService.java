@@ -96,7 +96,7 @@ public class ContaService {
                         && c.getDataCadastro().getYear() == ano
                         && c.getDataCadastro().getMonthValue() == mes)
                 .map(Conta::getValor)
-                .reduce(BigDecimal.ZERO, BigDecimal :: add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Map<String, Object> resumo = new HashMap<>();
         resumo.put("ano", ano);

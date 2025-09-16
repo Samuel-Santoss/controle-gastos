@@ -1,0 +1,50 @@
+[1mdiff --git a/src/main/java/com/sam/controlegastos/model/Conta.java b/src/main/java/com/sam/controlegastos/model/Conta.java[m
+[1mindex 4a13c88..664ef4e 100644[m
+[1m--- a/src/main/java/com/sam/controlegastos/model/Conta.java[m
+[1m+++ b/src/main/java/com/sam/controlegastos/model/Conta.java[m
+[36m@@ -1,8 +1,10 @@[m
+ package com.sam.controlegastos.model;[m
+ [m
+[32m+[m[32mimport com.fasterxml.jackson.annotation.JsonFormat;[m
+ import jakarta.persistence.*;[m
+ [m
+ import java.math.BigDecimal;[m
+[32m+[m[32mimport java.time.LocalDate;[m
+ [m
+ @Entity[m
+ @Table(name = "conta")[m
+[36m@@ -16,10 +18,21 @@[m [mpublic class Conta {[m
+     @Column(name = "descricao_conta", nullable = false)[m
+     private String descricao;[m
+ [m
+[32m+[m[32m    @JsonFormat(pattern = "yyyy-MM-dd")[m
+[32m+[m[32m    private LocalDate dataCadastro = LocalDate.now();[m
+ [m
+     @Column(nullable = false, precision = 10, scale = 2)[m
+     private BigDecimal valor;[m
+ [m
+[32m+[m[32m    public Conta (){[m
+[32m+[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public Conta(String descricao, BigDecimal valor, LocalDate dataCadastro){[m
+[32m+[m[32m        this.descricao = descricao;[m
+[32m+[m[32m        this.valor = valor;[m
+[32m+[m[32m        this.dataCadastro = (dataCadastro !=null) ? dataCadastro : LocalDate.now();[m
+[32m+[m[32m    }[m
+[32m+[m
+     public Long getId() {[m
+         return id;[m
+     }[m
+[36m@@ -43,4 +56,12 @@[m [mpublic class Conta {[m
+     public void setValor(BigDecimal valor) {[m
+         this.valor = valor;[m
+     }[m
+[32m+[m
+[32m+[m[32m    public LocalDate getDataCadastro() {[m
+[32m+[m[32m        return dataCadastro;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public void setDataCadastro(LocalDate dataCadastro) {[m
+[32m+[m[32m        this.dataCadastro = (dataCadastro != null) ? dataCadastro : LocalDate.now();[m
+[32m+[m[32m    }[m
+ }[m
