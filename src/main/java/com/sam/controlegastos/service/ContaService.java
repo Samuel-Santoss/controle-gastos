@@ -89,6 +89,12 @@ public class ContaService {
         return contaRepository.findAll();
     }
 
+    // Buscar por Id
+    public Conta buscarPorId (Long id){
+        return contaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conta não localizada com id " + id));
+    }
+
     // Resumo mensal (valor total gasto em um mês)
     public Map<String, Object> resumoMensal(int ano, int mes) {
         BigDecimal total = contaRepository.findAll().stream()
