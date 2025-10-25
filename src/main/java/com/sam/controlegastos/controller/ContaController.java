@@ -62,4 +62,12 @@ public class ContaController {
 
         return ResponseEntity.ok(dto);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarConta (@PathVariable Long id) {
+        contaService.excluirConta(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    
 }
