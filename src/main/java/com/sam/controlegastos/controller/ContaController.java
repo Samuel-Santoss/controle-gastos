@@ -2,6 +2,7 @@ package com.sam.controlegastos.controller;
 
 import com.sam.controlegastos.dto.ContaCreateDTO;
 import com.sam.controlegastos.dto.ContaResponseDTO;
+import com.sam.controlegastos.dto.ContaUpdateDTO;
 import com.sam.controlegastos.model.Conta;
 import com.sam.controlegastos.service.ContaService;
 import jakarta.persistence.Id;
@@ -69,5 +70,10 @@ public class ContaController {
         return ResponseEntity.noContent().build();
     }
 
-    
+    @PutMapping("/{id}")
+    public ResponseEntity<ContaResponseDTO> atualizarConta (@PathVariable Long id, @RequestBody @Valid ContaUpdateDTO dto) {
+        ContaResponseDTO contaAtualizada = contaService.atualizarConta(id, dto);
+        return ResponseEntity.ok(contaAtualizada);
+    }
+
 }

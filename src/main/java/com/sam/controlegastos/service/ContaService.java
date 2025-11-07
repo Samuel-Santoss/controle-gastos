@@ -1,6 +1,8 @@
 package com.sam.controlegastos.service;
 
 
+import com.sam.controlegastos.dto.ContaResponseDTO;
+import com.sam.controlegastos.dto.ContaUpdateDTO;
 import com.sam.controlegastos.model.Conta;
 import com.sam.controlegastos.repository.ContaRepository;
 import org.springframework.stereotype.Service;
@@ -84,6 +86,18 @@ public class ContaService {
         }
     }
 
+    public ContaResponseDTO atualizarConta (Long id, ContaUpdateDTO dto) {
+        Conta   contaExistente = contaRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("Conta não encontrada, com Id " +id));
+
+        contaExistente.setDescricao(dto.getDescricao());
+        contaExistente.setValor(dto.getValor());
+        contaExistente.setDataCadastro(dto.getDataCadastro());
+
+        Conta contaAtualiza = contaRepository.save(contaExistente);
+        return new ContaResponseDTO(contaAtualiza);
+
+    }
     // Listar todas as contas
     public List<Conta> listarContas() {
         return contaRepository.findAll();
